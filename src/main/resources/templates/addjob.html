@@ -108,38 +108,14 @@
                     <input type="radio" name="ratingThree" id="proficientIdThree" value="Proficient"/>
                     <label class="section-heading" for="familiarIdThree">Familiar</label>
                     <input type="radio" name="ratingThree" id="familiarIdThree" value="Familiar"/>
-                    
-                    
-                    
-                    
-                    
-                    
-                    <!--<div class="table-responsive">-->
-                        <!--<table class="table table-hover table-condensed">-->
-                            <!--<caption>-->
-                                <!--<h3><b>Desired Skills</b></h3>-->
-                            <!--</caption>-->
-
-                            <!--<tbody>-->
-                            <!--&lt;!&ndash; TODO it would be cool to have a set of radio buttons inline with each skill so recruiter could choose rating &ndash;&gt;-->
-                            <!--&lt;!&ndash; tricky getting these ratings back to the controller post route..... &ndash;&gt;-->
-                                <!--<th:block th:each="item : ${#lists.sort(skills)}">-->
-                                    <!--<tr>-->
-                                        <!--&lt;!&ndash; checked skill ids will be available as request params in controller post route &ndash;&gt;-->
-                                        <!--<td><input type="checkbox" name="checkedIds" th:value="${item.id}"/></td>-->
-                                        <!--<td th:text="${item.skill}"></td>-->
-                                    <!--</tr>-->
-                                <!--</th:block>-->
-                            <!--</tbody>-->
-
-                        <!--</table>-->
-                    <!--</div>-->
 
 
                     <div class="clearfix"></div>
                     <input class="btn btn-primary bold-input" type="submit" value="Submit"/>
                     <!-- TODO make the delete button align to the right -->
-                    <a class="btn btn-warning bold-input" th:href="@{|/delete/*{id}?type=job|}"><b>Delete</b></a>
+                    <div th:remove="all" th:if="${!showDelete}">
+                        <a class="btn btn-warning bold-input" th:href="@{|/delete/*{id}?type=job|}"><b>Delete</b></a>
+                    </div>
 
                 </form>
 

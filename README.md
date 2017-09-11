@@ -17,8 +17,6 @@ db seed sql:
 INSERT INTO role VALUES(1, 'ROLE_USER');
 INSERT INTO role VALUES(2, 'ROLE_RECRUITER');
 INSERT INTO role VALUES(3, 'ROLE_ADMIN');
-
--- (id, rating, skill) 
 INSERT INTO skill VALUES(1, 'Expert', 'Java programming');
 INSERT INTO skill VALUES(2, 'Proficient', 'Java programming');
 INSERT INTO skill VALUES(3, 'Familiar', 'Java programming');

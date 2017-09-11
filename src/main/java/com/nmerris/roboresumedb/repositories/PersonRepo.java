@@ -25,4 +25,6 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
     // get a list of Persons who have any skill that exactly matches any of the skills
     Collection<Person> findBySkillsIsAndRolesIs(Skill skill, Role role);
 
+    Long countByRoles(Role role);
+
 }

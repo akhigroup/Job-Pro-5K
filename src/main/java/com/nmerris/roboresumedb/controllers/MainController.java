@@ -42,7 +42,9 @@ public class MainController {
     @GetMapping("/login")
     public String login(Model model) {
         model.addAttribute("message", "Please log in or register");
-
+        model.addAttribute("numRecruiters", personRepo.countByRoles(roleRepo.findByRole("ROLE_RECRUITER")));
+        model.addAttribute("numSeekers", personRepo.countByRoles(roleRepo.findByRole("ROLE_USER")));
+        model.addAttribute("numJobs", jobRepo.count());
         // after successfully logging in, user will see their summary page via the /summary route
         // there is no login post route, it is never called, SecurityConfiguration class sets the default route
         // after logging in
@@ -79,7 +81,7 @@ public class MainController {
 
         // should never happen
         // TODO need a custom error page instead of redirecting randomly
-        return "redirect:/";
+        return "redirect:/login";
     }
 
 // never called
@@ -91,10 +93,15 @@ public class MainController {
     // default route takes user to addperson, but since basic authentication security is enabled, they will have to
     // go through the login route first, then Spring will automatically take them to addperson
     @GetMapping("/")
-    public String indexPageGet() {
-        // TODO might be nice to show the count of job postings, persons, recruiters in 'welcome/login' page
+    public String indexPageGet(Model model) {
+//        // TODO might be nice to show the count of job postings, persons, recruiters in 'welcome/login' page
+//        model.addAttribute("message", "Please log in or register");
+//
+//        model.addAttribute("numRecruiters", personRepo.countByRoleIs("ROLE_RECRUITER"));
+//        model.addAttribute("numSeekers", personRepo.countByRoleIs("ROLE_USER"));
+//        model.addAttribute("numJobs", jobRepo.count());
 
-        return "welcome";
+        return "redirect:/login";
     }
 
 
@@ -147,9 +154,13 @@ public class MainController {
         model.addAttribute("message", "Thank you for registering "
                 + user.getNameFirst() + " " + user.getNameLast() + ", please log in");
 
+
+        model.addAttribute("numRecruiters", personRepo.countByRoles(roleRepo.findByRole("ROLE_RECRUITER")));
+        model.addAttribute("numSeekers", personRepo.countByRoles(roleRepo.findByRole("ROLE_USER")));
+        model.addAttribute("numJobs", jobRepo.count());
+
         // always need to login after registering
         // after successfully logging in, user will see their summary page via the /summary route
-//        return "redirect:/";
         return "login";
 
     }
@@ -159,29 +170,16 @@ public class MainController {
     public String searchGet(Model model, Principal principal) {
         System.out.println("=============================================================== just entered /search GET");
 
-
+        // display the appropriate navbar depending on the logged in persons role
         if(personRepo.findByUsername(principal.getName()).getRole().equals("ROLE_USER")) {
             model.addAttribute("navType", "user");
         }
         else {
             model.addAttribute("navType", "recruiter");
         }
+        model.addAttribute("pageState", getPageLinkState(personRepo.findByUsername(principal.getName())));
 
-
-        // can't get thymeleaf sec:authorize to work, so have to workaround, it is behaving inconsistently
-        // it ALWAYS rendered ROLE_USER, no matter what
-//        switch(personRepo.findByUsername(principal.getName()).getRole()) {
-//            case "ROLE_USER" :
-                model.addAttribute("pageState", getPageLinkState(personRepo.findByUsername(principal.getName())));
-//                return "searchuser";
-//
-//            case "ROLE_RECRUITER" :
-//                return "searchrecruiter";
-//        }
-
-        // should never happen
         return "search";
-//        return "redirect:/";
     }
 
 
@@ -246,9 +244,22 @@ public class MainController {
                 break;
 
             case "jobs" :
+//                model.addAttribute("searchResults", jobRepo.findByTitleContainingOrderByTitleAsc(searchString));
+//                model.addAttribute("tableType", "job");
+
                 // find all jobs that have title fields that contain the search string
-                model.addAttribute("searchResults", jobRepo.findByTitleContainingOrderByTitleAsc(searchString));
-                model.addAttribute("tableType", "job");
+                if(personRepo.findByUsername(principal.getName()).getRole().equals("ROLE_USER")) {
+                    // if seeker/user is logged in, want to search jobs table
+                    // because a seeker would be searching for available jobs
+                    model.addAttribute("searchResults", jobRepo.findByTitleContainingOrderByTitleAsc(searchString));
+                    model.addAttribute("tableType", "job");
+                }
+                else {
+                    // if recruiter is logged in, want to search work experiences table table
+                    // because a recruiter would be searching for seekers who have/had job titles in question
+                    model.addAttribute("searchResults", workExperienceRepo.findByJobTitleContainingOrderByJobTitleAsc(searchString));
+                    model.addAttribute("tableType", "workExperience");
+                }
                 break;
 
             case "companies" :
@@ -324,6 +335,7 @@ public class MainController {
         model.addAttribute("highLightPostJob", true);
         model.addAttribute("highLightPostList", false);
         model.addAttribute("highLightSearch", false);
+        model.addAttribute("showDelete", false);
 
         // make a Set of skill names, no duplicates in a set, user can pick from these, and also pick a rating
         Set<String> skillNames = new LinkedHashSet<>();
@@ -365,6 +377,8 @@ public class MainController {
             model.addAttribute("highLightPostJob", true);
             model.addAttribute("highLightPostList", false);
             model.addAttribute("highLightSearch", false);
+            model.addAttribute("showDelete", false);
+
 
             // make a Set of skill names, no duplicates in a set, user can pick from these, and also pick a rating
             Set<String> skillNames = new LinkedHashSet<>();

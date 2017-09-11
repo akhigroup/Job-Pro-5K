@@ -15,7 +15,7 @@
 </div>
 
 <div class="container">
-    <div class="col-lg-8 col-lg-offset-2">
+    <div class="col-lg-10 col-lg-offset-1">
         <div class="panel panel-default card card-3">
             <div class="panel-body">
 
@@ -46,10 +46,10 @@
                         </table>
                     </div>
 
-                    <!-- job table -->
+                    <!-- job table : seen by seekers when searching for 'jobs' -->
                     <div th:case="'job'" class="table-responsive">
                         <table class="table table-hover">
-                            <caption><h3><b>Found these jobs</b></h3></caption>
+                            <caption><h3><b>Found these job postings</b></h3></caption>
                             <thead>
                             <tr>
                                 <th>Job Title</th>
@@ -65,6 +65,29 @@
                                 <td th:text="${item.description}"></td>
                                 <td th:text="'$' + ${item.minSalary} + ' - $' + ${item.maxSalary}"></td>
                             </th:block>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- work experience table : seen by recruiters when searching for 'jobs' -->
+                    <div th:case="'workExperience'" class="table-responsive">
+                        <table class="table table-hover">
+                            <caption><h3><b>Found these people who have or had this job title</b></h3></caption>
+                            <thead>
+                                <tr>
+                                    <th>Job Title</th>
+                                    <th>Company</th>
+                                    <th>Person</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <th:block th:each="item : ${searchResults}">
+                                    <td th:text="${item.jobTitle}"></td>
+                                    <td th:text="${item.company}"></td>
+                                    <td th:text="${item.myPerson.nameFirst + ' ' + item.myPerson.nameLast}"></td>
+                                    <td th:text="${item.myPerson.email}"></td>
+                                </th:block>
                             </tbody>
                         </table>
                     </div>
@@ -92,7 +115,7 @@
                         </table>
                     </div>
 
-                    <!-- company table -->
+                    <!-- school table -->
                     <div th:case="'school'" class="table-responsive">
                         <table class="table table-hover">
                             <caption><h3><b>Found these schools</b></h3></caption>
