@@ -9,15 +9,15 @@
     <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-default card card-3">
             <div class="panel-body">
-                <h2 class="section-heading text-center">JOB PRO 5K</h2>
 
-                <h4 class="section-heading text-center">Connecting people and jobs since 2017</h4>
-
-
-
-
-                <br/>
-                <br/>
+                <div class="well">
+                    <h2 class="section-heading text-center">JOB PRO 5K</h2>
+                    <br/>
+                    <h4 class="section-heading text-center">Connecting people and jobs since 2017</h4>
+                    <h4 class="section-heading text-center" th:text="${numJobs} + ' job listings'"></h4>
+                    <h4 class="section-heading text-center" th:text="${numRecruiters} + ' recruiters'"></h4>
+                    <h4 class="section-heading text-center" th:text="${numSeekers} + ' job seekers'"></h4>
+                </div>
 
 
                 <h4 class="section-heading" th:text="${message}"></h4>
