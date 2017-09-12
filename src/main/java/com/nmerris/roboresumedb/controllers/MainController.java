@@ -352,6 +352,8 @@ public class MainController {
     }
 
 
+    // TODO could use HttpServletRequest myRequest instead of 6 diff RequestParameters, it's just less work
+    // you can then get the data our like this: myRequest.get(blah blah blah)
     @PostMapping("/addjob")
     public String addJobPost(@Valid @ModelAttribute("newJob") Job job,
                              BindingResult bindingResult,
@@ -413,6 +415,7 @@ public class MainController {
         Role roleUser = roleRepo.findByRole("ROLE_USER");
         LinkedHashSet<Person> matchedSeekers = new LinkedHashSet<>();
         for (Skill skill : job.getSkills()) {
+            //TODO BETTER TO USE findBySkillsIsInAndRolesIs(Set<skill>)
             matchedSeekers.addAll(personRepo.findBySkillsIsAndRolesIs(skill, roleUser));
         }
         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% matchedSeekers.size: " + matchedSeekers.size());
