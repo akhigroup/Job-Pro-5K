@@ -25,11 +25,9 @@ public class Job implements Comparable<Job> {
     @Size(max = 50)
     private String employer;
 
-//    @Min(0)
     @Max(1000000)
     private long minSalary;
 
-//    @Min(0)
     @Max(1000000)
     private long maxSalary;
 
@@ -50,7 +48,6 @@ public class Job implements Comparable<Job> {
     @Override
     public int compareTo(Job other) {
         // returns negative number is this.getId < other.getId, 0 if equal
-//        return Long.compare(this.getId(), other.getId());
         return getEmployer().compareToIgnoreCase(other.getEmployer());
 
     }

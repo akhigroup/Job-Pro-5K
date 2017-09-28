@@ -33,18 +33,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-//        http
-//                .authorizeRequests()
-//
-//                // anyone can access
-//                .antMatchers("/css/**", "/js/**", "/fonts/**", "/img/**", "/register", "/")
-//                    .permitAll()
-//
-//                .antMatchers("/add*", "/startover", "/editdetails", "/delete/*", "/update/*", "/finalresume",
-//                        "/course*", "/student*", "/summary")
-//                    .access("hasRole('ROLE_USER') or hasRole('ROLE_RECRUITER')")
-//                .anyRequest().authenticated();
-
         http
                 .authorizeRequests()
 

@@ -19,16 +19,10 @@ public class Skill implements Comparable<Skill> {
 
     @NotEmpty
     @Size(max = 50)
-//    @Column(unique = true)
     private String skill;
 
 //    @NotEmpty
     private String rating;
-
-    // Person owns Skill
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "person_id")
-//    private Person myPerson;
 
     // Skill owns Job
     @ManyToMany(mappedBy = "skills", fetch = FetchType.EAGER)
@@ -36,24 +30,6 @@ public class Skill implements Comparable<Skill> {
 
     @ManyToMany(mappedBy = "skills", fetch = FetchType.LAZY)
     private Collection<Person> persons;
-
-
-//
-//    public Job getMyJob() {
-//        return myJob;
-//    }
-//
-//    public void setMyJob(Job myJob) {
-//        this.myJob = myJob;
-//    }
-//
-//    public Person getMyPerson() {
-//        return myPerson;
-//    }
-//
-//    public void setMyPerson(Person myPerson) {
-//        this.myPerson = myPerson;
-//    }
 
 
     public Skill() {

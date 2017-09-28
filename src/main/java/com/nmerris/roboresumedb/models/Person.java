@@ -47,9 +47,6 @@ public class Person implements Comparable<Person> {
     @OneToMany(mappedBy = "myPerson", cascade = CascadeType.ALL, fetch= FetchType.LAZY)
     private Set<WorkExperience> workExperiences;
 
-//    @OneToMany(mappedBy = "myPerson", cascade = CascadeType.ALL, fetch= FetchType.LAZY)
-//    private Set<Skill> skills;
-
     @OneToMany(mappedBy = "myPerson", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Job> jobs;
 

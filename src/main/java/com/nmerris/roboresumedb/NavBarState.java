@@ -14,7 +14,6 @@ public class NavBarState {
     private boolean disableAddEdLink;
     private boolean disableAddSkillLink;
     private boolean disableAddWorkExpLink;
-//    private boolean disableEditDetailsLink;
     private boolean disableShowFinalLink;
 
     // navbar fragment will use these to know what number to put in the 'badges'
@@ -93,14 +92,6 @@ public class NavBarState {
     public void setDisableAddWorkExpLink(boolean disableAddWorkExpLink) {
         this.disableAddWorkExpLink = disableAddWorkExpLink;
     }
-
-//    public boolean getDisableEditDetailsLink() {
-//        return disableEditDetailsLink;
-//    }
-
-//    public void setDisableEditDetailsLink(boolean disableEditDetailsLink) {
-//        this.disableEditDetailsLink = disableEditDetailsLink;
-//    }
 
     public boolean getDisableShowFinalLink() {
         return disableShowFinalLink;

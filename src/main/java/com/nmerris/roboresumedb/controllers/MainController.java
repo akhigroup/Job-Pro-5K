@@ -118,14 +118,10 @@ public class MainController {
                                       BindingResult bindingResult, Model model,
                                       @RequestParam(value = "selectedRole") String role) {
 
-//        System.out.println("####################### /register POST... incoming role String is: " + role);
-
         // always add the incoming user back to the model
         model.addAttribute("newPerson", user);
 
         if(bindingResult.hasErrors()) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!) BINDING RESULT ERROR");
-
             if(personRepo.countByUsername(user.getUsername()) > 0) {
                 // in addition to other validation errors, the selected username already exists, so display
                 // a custom error message
@@ -169,7 +165,6 @@ public class MainController {
 
     @GetMapping("/search")
     public String searchGet(Model model, Principal principal) {
-//        System.out.println("=============================================================== just entered /search GET");
 
         // display the appropriate navbar depending on the logged in persons role
         if(personRepo.findByUsername(principal.getName()).getRole().equals("ROLE_USER")) {
@@ -189,9 +184,6 @@ public class MainController {
     public String searchPost(Model model, Principal principal,
                              @RequestParam(value = "type", required = false) String type,
                              @RequestParam(value = "searchString", required = false) String searchString) {
-//        System.out.println("=============================================================== just entered /search POST");
-//        System.out.println("============================================== search type: " + type);
-//        System.out.println("============================================== search string: " + searchString);
 
         model.addAttribute("pageState", getPageLinkState(personRepo.findByUsername(principal.getName())));
 
@@ -199,7 +191,6 @@ public class MainController {
         // add the navbar state object to the model if logged in role is USER
         // note: the recruiter navbar does not need any fancy state object
         if(personRepo.findByUsername(principal.getName()).getRole().equals("ROLE_USER")) {
-//            model.addAttribute("pageState", getPageLinkState(personRepo.findByUsername(principal.getName())));
             model.addAttribute("navType", "user");
         }
         else {
@@ -208,7 +199,6 @@ public class MainController {
 
         // display msg if user entered nothing and then clicked submit
         if(searchString.equals("")) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! found empty search string");
             model.addAttribute("emptySearchString", true);
             return "search";
         }
@@ -223,7 +213,6 @@ public class MainController {
 
                 // if user entered more than 2 parts, for now we will just display msg saying they can't do that
                 if(parts.length > 2) {
-//                    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! more than 2 names entered");
                     model.addAttribute("tooManyNames", true);
                     return  "search";
                 }
@@ -232,12 +221,10 @@ public class MainController {
                 // user entered either a first or last name, we don't know which, so query db by both
                 if(parts.length == 1) {
                     searchResults = personRepo.findByNameFirstIsOrNameLastIsOrderByNameLastAsc(searchString, searchString);
-//                    System.out.println("================== parts.length was 1... searchResults.size: " + searchResults.size());
                 }
                 else {
                     // user must have entered exactly 2 names, assume first  one entered was first name, second was last name
                     searchResults = personRepo.findByNameFirstIsAndNameLastIsOrderByNameLastAsc(parts[0], parts[1]);
-//                    System.out.println("================== parts.length was 2... searchResults.size: " + searchResults.size());
                 }
 
                 model.addAttribute("searchResults", searchResults);
@@ -312,14 +299,9 @@ public class MainController {
 
     @GetMapping("/joblist")
     public String jobListGet(Model model, Principal principal) {
-//        System.out.println("=============================================================== just entered /joblist GET");
-//        System.out.println("=========================================== principal.getName: " + principal.getName());
 
-
-//        model.addAttribute("jobs", jobRepo.findAllByMyPersonIs(personRepo.findByUsername(principal.getName())));
         model.addAttribute("message", "Your job postings");
         model.addAttribute("person", personRepo.findByUsername(principal.getName()));
-
         model.addAttribute("highLightPostJob", false);
         model.addAttribute("highLightPostList", true);
         model.addAttribute("highLightSearch", false);
@@ -330,7 +312,6 @@ public class MainController {
 
     @GetMapping("/addjob")
     public String addJobGet(Model model) {
-//        System.out.println("=============================================================== just entered /addJob GET");
 
         model.addAttribute("newJob", new Job());
         model.addAttribute("highLightPostJob", true);
@@ -340,7 +321,6 @@ public class MainController {
 
         // make a Set of skill names, no duplicates in a set, user can pick from these, and also pick a rating
         Set<String> skillNames = new LinkedHashSet<>();
-//        Set<String> skillNames = new HashSet<>();
         skillNames.add("None Selected");
 
         for (Skill skill : skillRepo.findAllByOrderBySkillAsc()) {
@@ -365,23 +345,12 @@ public class MainController {
                              @RequestParam(value = "ratingOne", required = false) String ratingOne,
                              @RequestParam(value = "ratingTwo", required = false) String ratingTwo,
                              @RequestParam(value = "ratingThree", required = false) String ratingThree) {
-//        System.out.println("=============================================================== just entered /addJob POST");
-//        System.out.println("============ selectedSkillNameOne: " + selectedSkillNameOne);
-//        System.out.println("======= ratingOne: " + ratingOne);
-//        System.out.println("============ selectedSkillNameTwo: " + selectedSkillNameTwo);
-//        System.out.println("======= ratingTwo: " + ratingTwo);
-//        System.out.println("============ selectedSkillNameThree: " + selectedSkillNameThree);
-//        System.out.println("======= ratingThree: " + ratingThree);
-
 
         if(bindingResult.hasErrors()) {
-//            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!) BINDING RESULT ERROR");
-
             model.addAttribute("highLightPostJob", true);
             model.addAttribute("highLightPostList", false);
             model.addAttribute("highLightSearch", false);
             model.addAttribute("showDelete", false);
-
 
             // make a Set of skill names, no duplicates in a set, user can pick from these, and also pick a rating
             Set<String> skillNames = new LinkedHashSet<>();
@@ -419,10 +388,7 @@ public class MainController {
             //TODO BETTER TO USE findBySkillsIsInAndRolesIs(Set<skill>)
             matchedSeekers.addAll(personRepo.findBySkillsIsAndRolesIs(skill, roleUser));
         }
-//        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% matchedSeekers.size: " + matchedSeekers.size());
         model.addAttribute("peopleWithMatchedSkills", matchedSeekers);
-
-
         model.addAttribute("jobJustAdded", jobRepo.findOne(job.getId()));
         model.addAttribute("highLightPostJob", true);
         model.addAttribute("highLightPostList", false);
@@ -437,8 +403,6 @@ public class MainController {
     @PostMapping("/addperson")
     public String addPersonPost(@Valid @ModelAttribute("newPerson") Person personFromForm,
                                 BindingResult bindingResult, Model model, Principal principal, Authentication auth) {
-//        System.out.println("=============================================================== just entered /addperson POST");
-//        System.out.println("=========================================== currPerson.getPersonId(): " + currPerson.getPersonId());
 
         // return the same view (now with validation error messages) if there were any validation problems
         if(bindingResult.hasErrors()) {
@@ -464,8 +428,6 @@ public class MainController {
 
     @GetMapping("/addeducation")
     public String addEdGet(Model model, Principal principal) {
-//        System.out.println("=============================================================== just entered /addeducation GET");
-//        System.out.println("=========================================== currPerson.getPersonId(): " + currPerson.getPersonId());
 
         // get the current Person
         Person p = personRepo.findByUsername(principal.getName());
@@ -485,7 +447,6 @@ public class MainController {
 
         model.addAttribute("firstAndLastName", p.getFullName());
 
-//        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% created new ea, attached currPerson to it, about to add it to model");
         // create a new ea, attach the curr person to it, and add it to model
         EducationAchievement ea = new EducationAchievement();
         ea.setMyPerson(p);
@@ -498,15 +459,12 @@ public class MainController {
     @PostMapping("/addeducation")
     public String addEdPost(@Valid @ModelAttribute("newEdAchievement") EducationAchievement educationAchievement,
                             BindingResult bindingResult, Model model, Principal principal) {
-//        System.out.println("=============================================================== just entered /addeducation POST");
-//        System.out.println("=========================================== currPerson.getPersonId(): " + currPerson.getPersonId());
 
         // get the current Person
         Person p = personRepo.findByUsername(principal.getName());
 
         // get the current count from educationRepo for the current Person
         long count = educationRepo.countAllByMyPersonIs(p);
-//        System.out.println("=========================================== repo count for currPerson is: " + count);
 
         // the persons name is show at the top of each 'add' section AND each confirmation page, so we want to add
         // it to the model no matter which view is returned
@@ -529,12 +487,10 @@ public class MainController {
         // I'm being picky here, but it is possible for the user to refresh the page, which bypasses the form submit
         // button, and so they would be able to add more than 10 items, to avoid this, just condition the db save on count
         if(count < 10) {
-//            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% about to save ea to educationRepo");
             educationRepo.save(educationAchievement);
 
             // need to get an updated edsCount after saving to repo
             count = educationRepo.countAllByMyPersonIs(p);
-//            System.out.println("=========================================== repo count for currPerson is: " + count);
         }
 
         // need to get the count AFTER successfully adding to db, so it is up to date
@@ -561,8 +517,6 @@ public class MainController {
     // logic in this route is identical to /addeducation, see /addeducation GetMapping for explanatory comments
     @GetMapping("/addworkexperience")
     public String addWorkGet(Model model, Principal principal) {
-//        System.out.println("=============================================================== just entered /addworkexperience GET");
-//        System.out.println("=========================================== currPerson.getPersonId(): " + currPerson.getPersonId());
 
         // get the current Person
         Person p = personRepo.findByUsername(principal.getName());
@@ -574,7 +528,6 @@ public class MainController {
         model.addAttribute("pageState", pageState);
         model.addAttribute("firstAndLastName", p.getFullName());
 
-//        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% created new workExp, attached currPerson to it, about to add it to model");
         WorkExperience workExp = new WorkExperience();
         workExp.setMyPerson(p);
         model.addAttribute("newWorkExperience", workExp);
@@ -587,15 +540,12 @@ public class MainController {
     @PostMapping("/addworkexperience")
     public String addWorkPost(@Valid @ModelAttribute("newWorkExperience") WorkExperience workExperience,
                             BindingResult bindingResult, Model model, Principal principal) {
-//        System.out.println("=============================================================== just entered /addworkexperience POST");
-//        System.out.println("=========================================== currPerson.getPersonId(): " + currPerson.getPersonId());
 
         // get the current Person
         Person p = personRepo.findByUsername(principal.getName());
 
         // get the current count from work repo for the current Person
         long count = workExperienceRepo.countAllByMyPersonIs(p);
-//        System.out.println("=========================================== repo count for currPerson is: " + count);
 
         model.addAttribute("firstAndLastName", p.getFullName());
 
@@ -611,11 +561,8 @@ public class MainController {
         }
 
         if(count < 10) {
-//            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% about to save workExp to workExpRepo");
             workExperienceRepo.save(workExperience);
-
             count = workExperienceRepo.countAllByMyPersonIs(p);
-//            System.out.println("=========================================== repo count for currPerson is: " + count);
         }
 
         model.addAttribute("currentNumRecords", count);
@@ -637,8 +584,6 @@ public class MainController {
     // logic in this route is identical to /addeducation, see /addeducation GetMapping for explanatory comments
     @GetMapping("/addskill")
     public String addSkillGet(Model model, Principal principal) {
-//        System.out.println("=============================================================== just entered /addskill GET");
-//        System.out.println("=========================================== currPerson.getPersonId(): " + currPerson.getPersonId());
 
         // get the current Person
         Person p = personRepo.findByUsername(principal.getName());
@@ -670,35 +615,21 @@ public class MainController {
     public String addSkillPost(@RequestParam(value = "selectedSkillName", required = false) String selectedSkillName,
                                @RequestParam(value = "rating", required = false) String rating,
                                 Model model, Principal principal) {
-//        System.out.println("=============================================================== just entered /addskill POST");
-//        System.out.println("=========================================== currPerson.getPersonId(): " + currPerson.getPersonId());
-
-//        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! got newSkill with name: " + selectedSkillName);
-//        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! got newSkill with rating: " + rating);
-
 
         // get the current Person
         Person p = personRepo.findByUsername(principal.getName());
 
         // get the current count from work repo for the current Person
         long count = p.getSkills().size();
-//        System.out.println("=========================================== repo count for currPerson is: " + count);
 
         model.addAttribute("firstAndLastName", p.getFullName());
 
         Skill skillToAddToPerson = skillRepo.findBySkillIsAndRatingIs(selectedSkillName, rating);
 
-//        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! skillRepo.findByBlahBlah id: " + skillToAddToPerson.getId());
-
-
         if(count < 20) {
-//            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% about to save skill to Repo");
-
             p.addSkill(skillToAddToPerson);
             personRepo.save(p);
-
             count = p.getSkills().size();
-//            System.out.println("=========================================== repo count for currPerson is: " + count);
         }
 
         NavBarState pageState = getPageLinkState(p);
@@ -718,8 +649,6 @@ public class MainController {
     // every record (except the single personal details record) can also be deleted by clicking a link next to it
     @GetMapping("/editdetails")
     public String editDetails(Model model, Principal principal) {
-//        System.out.println("=============================================================== just entered /editdetails GET");
-//        System.out.println("=========================================== currPerson.getPersonId(): " + currPerson.getPersonId());
 
         // get the current Person
         Person p = personRepo.findByUsername(principal.getName());
@@ -741,12 +670,7 @@ public class MainController {
     // this route is triggered when the user clicks on the 'delete' link next to a row in editdetails.html
     // no model is needed here because all the returned views are redirects
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") long id, @RequestParam("type") String type, Principal principal)
-    {
-//        System.out.println("=============================================================== just entered /delete/{id} GET");
-//        System.out.println("=========================================== currPerson.getPersonId(): " + currPerson.getPersonId());
-//        System.out.println("=========================================== incoming path var Id: " + id);
-
+    public String delete(@PathVariable("id") long id, @RequestParam("type") String type, Principal principal) {
         Person p = personRepo.findByUsername(principal.getName());
 
         try {
@@ -815,11 +739,7 @@ public class MainController {
     // id is the id to update
     // type is what table to update
     @GetMapping("/update/{id}")
-    public String update(@PathVariable("id") long id, @RequestParam("type") String type, Model model, Principal principal)
-    {
-//        System.out.println("=============================================================== just entered /update/{id} GET");
-//        System.out.println("=========================================== currPerson.getPersonId() initially: " + currPerson.getPersonId());
-
+    public String update(@PathVariable("id") long id, @RequestParam("type") String type, Model model, Principal principal) {
         // set the current person ID to the incoming path variable IF type is person or student
         Person p = personRepo.findByUsername(principal.getName());
 
@@ -882,7 +802,7 @@ public class MainController {
         return"redirect:/editdetails";
     }
 
-
+    // shows final resume
     @GetMapping("/finalresume")
     public String finalResumeGet(Model model, Principal principal) {
         Person p = personRepo.findByUsername(principal.getName());
