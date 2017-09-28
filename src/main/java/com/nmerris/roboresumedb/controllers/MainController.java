@@ -93,11 +93,11 @@ public class MainController {
         // create user roles, but first check to see if the already exist
         if(roleRepo.count() == 0) {
             Role seekerRole = new Role();
-            seekerRole.setRole("SEEKER");
+            seekerRole.setRole("ROLE_USER");
             roleRepo.save(seekerRole);
 
             Role recruiterRole = new Role();
-            recruiterRole.setRole("RECRUITER");
+            recruiterRole.setRole("ROLE_RECRUITER");
             roleRepo.save(recruiterRole);
         }
 
