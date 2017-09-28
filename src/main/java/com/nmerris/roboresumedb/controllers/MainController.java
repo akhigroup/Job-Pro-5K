@@ -1,6 +1,7 @@
 package com.nmerris.roboresumedb.controllers;
 
 import com.nmerris.roboresumedb.NavBarState;
+import com.nmerris.roboresumedb.PredeterminedSkills;
 import com.nmerris.roboresumedb.Utilities;
 import com.nmerris.roboresumedb.models.*;
 import com.nmerris.roboresumedb.repositories.*;
@@ -99,6 +100,25 @@ public class MainController {
             Role recruiterRole = new Role();
             recruiterRole.setRole("ROLE_RECRUITER");
             roleRepo.save(recruiterRole);
+        }
+
+        // create a bunch of skills
+        // TODO: allow users to create their own skills if they are not in this preset list
+        if(skillRepo.count() == 0) {
+            for(int i = 0; i < PredeterminedSkills.skills.length; i++) {
+                Skill sExpert = new Skill();
+                Skill sProficient = new Skill();
+                Skill sFamiliar = new Skill();
+                sExpert.setSkill(PredeterminedSkills.skills[i]);
+                sExpert.setRating("Expert");
+                sProficient.setSkill(PredeterminedSkills.skills[i]);
+                sProficient.setRating("Proficient");
+                sFamiliar.setSkill(PredeterminedSkills.skills[i]);
+                sFamiliar.setRating("Familiar");
+                skillRepo.save(sExpert);
+                skillRepo.save(sProficient);
+                skillRepo.save(sFamiliar);
+            }
         }
 
 
