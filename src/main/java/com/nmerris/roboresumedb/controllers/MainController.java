@@ -240,11 +240,11 @@ public class MainController {
 
                 // user entered either a first or last name, we don't know which, so query db by both
                 if(parts.length == 1) {
-                    searchResults = personRepo.findByNameFirstIsOrNameLastIsOrderByNameLastAsc(searchString, searchString);
+                    searchResults = personRepo.findByNameFirstIsIgnoreCaseOrNameLastIsIgnoreCaseOrderByNameLastAsc(searchString, searchString);
                 }
                 else {
                     // user must have entered exactly 2 names, assume first  one entered was first name, second was last name
-                    searchResults = personRepo.findByNameFirstIsAndNameLastIsOrderByNameLastAsc(parts[0], parts[1]);
+                    searchResults = personRepo.findByNameFirstIsIgnoreCaseAndNameLastIsIgnoreCaseOrderByNameLastAsc(parts[0], parts[1]);
                 }
 
                 model.addAttribute("searchResults", searchResults);
@@ -252,33 +252,30 @@ public class MainController {
                 break;
 
             case "jobs" :
-//                model.addAttribute("searchResults", jobRepo.findByTitleContainingOrderByTitleAsc(searchString));
-//                model.addAttribute("tableType", "job");
-
                 // find all jobs that have title fields that contain the search string
                 if(personRepo.findByUsername(principal.getName()).getRole().equals("ROLE_USER")) {
                     // if seeker/user is logged in, want to search jobs table
                     // because a seeker would be searching for available jobs
-                    model.addAttribute("searchResults", jobRepo.findByTitleContainingOrderByTitleAsc(searchString));
+                    model.addAttribute("searchResults", jobRepo.findByTitleContainingIgnoreCaseOrderByTitleAsc(searchString));
                     model.addAttribute("tableType", "job");
                 }
                 else {
                     // if recruiter is logged in, want to search work experiences table table
                     // because a recruiter would be searching for seekers who have/had job titles in question
-                    model.addAttribute("searchResults", workExperienceRepo.findByJobTitleContainingOrderByJobTitleAsc(searchString));
+                    model.addAttribute("searchResults", workExperienceRepo.findByJobTitleContainingIgnoreCaseOrderByJobTitleAsc(searchString));
                     model.addAttribute("tableType", "workExperience");
                 }
                 break;
 
             case "companies" :
                 // find all jobs that have company fields that contain the search string
-                model.addAttribute("searchResults", jobRepo.findByEmployerContainingOrderByEmployerAsc(searchString));
+                model.addAttribute("searchResults", jobRepo.findByEmployerContainingIgnoreCaseOrderByEmployerAsc(searchString));
                 model.addAttribute("tableType", "company");
                 break;
 
             case "schools" :
                 // find all eds that have school name fields that contain the search string
-                model.addAttribute("searchResults", educationRepo.findBySchoolContainsOrderBySchoolAsc(searchString));
+                model.addAttribute("searchResults", educationRepo.findBySchoolContainsIgnoreCaseOrderBySchoolAsc(searchString));
                 model.addAttribute("tableType", "school");
 
         }

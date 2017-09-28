@@ -17,6 +17,6 @@ public interface EducationRepo extends CrudRepository<EducationAchievement, Long
     // returns the number of removed records
     long removeAllByMyPersonIs(Person currentPerson);
 
-    LinkedHashSet<EducationAchievement> findBySchoolContainsOrderBySchoolAsc(String school);
+    LinkedHashSet<EducationAchievement> findBySchoolContainsIgnoreCaseOrderBySchoolAsc(String school);
 
 }

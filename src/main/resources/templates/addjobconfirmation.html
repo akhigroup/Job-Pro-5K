@@ -11,11 +11,6 @@
     <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-default card card-3">
             <div class="panel-body">
-                <!--<div class="text-center feedback">-->
-                    <!--<h2 th:text="'Resume for ' + ${firstAndLastName}"></h2>-->
-                    <!--<span class="glyphicon glyphicon-education"></span>-->
-                    <!--<span th:text="${currentNumRecords} + ' of 10 educational achievements entered'"></span>-->
-                <!--</div>-->
 
                 <div class="panel panel-primary">
                     <div class="panel-heading"><h4><b>Job Post Confirmation</b></h4></div>
@@ -34,6 +29,8 @@
                     <br/>
 
                     <!-- display a table of seekers with skills that match the job just posted -->
+                    <!-- but only if there is at least one match -->
+                    <th:block th:if="${peopleWithMatchedSkills.size() > 0}">
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <caption><h3><b>Users who have any of the posted skills</b></h3></caption>
@@ -48,11 +45,13 @@
                                 <th:block th:each="item : ${#lists.sort(peopleWithMatchedSkills)}">
                                     <td th:text="${item.nameFirst}"></td>
                                     <td th:text="${item.nameLast}"></td>
+                                    <!--<td><a th:href="'mailto:' + ${item.email}"></a></td>-->
                                     <td th:text="${item.email}"></td>
                                 </th:block>
                             </tbody>
                         </table>
                     </div>
+                    </th:block>
 
                 </div>
                 <a class="btn btn-primary bold-input" th:href="@{~/addjob}"><b>+ Add Another</b></a>

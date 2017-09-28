@@ -18,6 +18,6 @@ public interface WorkExperienceRepo extends CrudRepository<WorkExperience, Long>
     // returns the number of removed records
     long removeAllByMyPersonIs(Person currentPerson);
 
-    LinkedHashSet<WorkExperience> findByJobTitleContainingOrderByJobTitleAsc(String jobTitle);
+    LinkedHashSet<WorkExperience> findByJobTitleContainingIgnoreCaseOrderByJobTitleAsc(String jobTitle);
 
 }

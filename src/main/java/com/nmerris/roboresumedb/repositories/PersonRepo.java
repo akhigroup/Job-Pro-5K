@@ -17,10 +17,10 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
 
     Long countByUsername(String username);
 
-    LinkedHashSet<Person> findByNameFirstIsAndNameLastIsOrderByNameLastAsc(String firstName, String lastName);
+    LinkedHashSet<Person> findByNameFirstIsIgnoreCaseAndNameLastIsIgnoreCaseOrderByNameLastAsc(String firstName, String lastName);
 
     // if user enters only one name, assume it could be either a first or last name
-    LinkedHashSet<Person> findByNameFirstIsOrNameLastIsOrderByNameLastAsc(String name, String sameName);
+    LinkedHashSet<Person> findByNameFirstIsIgnoreCaseOrNameLastIsIgnoreCaseOrderByNameLastAsc(String name, String sameName);
 
     // get a list of Persons who have any skill that exactly matches any of the skills
     Collection<Person> findBySkillsIsAndRolesIs(Skill skill, Role role);
